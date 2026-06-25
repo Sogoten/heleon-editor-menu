@@ -147,6 +147,7 @@
   <div class="header-actions">
     <button class="btn" onclick="toggleDesign()">🎨 Σχεδιασμός</button>
     <button class="btn" onclick="expandAll()">Άνοιγμα όλων</button>
+    <button class="btn btn-teal" onclick="addCategory()">+ Κατηγορία</button>
     <button class="btn btn-teal" onclick="downloadMenu()">⬇ Κατέβασε Menu</button>
     <button class="btn btn-publish" onclick="publishMenu()" id="publishBtn">🚀 Δημοσίευση</button>
   </div>
@@ -232,7 +233,7 @@ const LOGO_B64 = '/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQ
 // Patch login logo src
 document.querySelector('.login-logo').src = 'data:image/jpeg;base64,' + LOGO_B64;
 
-const TABS = [
+let TABS = [
   {id:'breakfast', label:'Breakfast'},
   {id:'starters',  label:'Για το Ξεκίνημα'},
   {id:'sea',       label:'Από την Θάλασσα'},
@@ -363,6 +364,26 @@ function setHeadingColor(c,custom){ design.headingColor=c; if(!custom) buildColo
 function setItemColor(c,custom){ design.itemColor=c; if(!custom) buildColorChips(); }
 function setBgColor(c,custom){ design.bgColor=c; if(!custom) buildColorChips(); }
 
+function addCategory(){
+  const id = 'cat_' + Date.now();
+  TABS.push({id, label:'Νέα Κατηγορία'});
+  tabLabels[id] = 'Νέα Κατηγορία';
+  state[id] = [];
+  activeTab = id;
+  render();
+  setTimeout(()=>{ const el=document.getElementById('tabs'); if(el) el.scrollLeft=el.scrollWidth; },50);
+}
+
+function deleteCategory(tabId){
+  if(TABS.length<=1){ showToast('⚠ Πρέπει να υπάρχει τουλάχιστον μία κατηγορία.'); return; }
+  if(!confirm('Διαγραφή κατηγορίας "'+tabLabels[tabId]+'" και όλων των προϊόντων της;')) return;
+  TABS = TABS.filter(t=>t.id!==tabId);
+  delete tabLabels[tabId];
+  delete state[tabId];
+  if(activeTab===tabId) activeTab = TABS[0].id;
+  render();
+}
+
 function updateFlat(tabId,i,field,val){ state[tabId][i][field]=val; }
 function deleteFlat(tabId,i){ state[tabId].splice(i,1); render(); }
 function addFlat(tabId){ state[tabId].push({name:'Νέο προϊόν',desc:'',price:'0,00€'}); render(); }
@@ -387,7 +408,10 @@ function renderFlatSection(tabId, items){
         <input class="section-name-input" type="text" value="${esc(tabLabels[tabId])}" onclick="event.stopPropagation()" onchange="updateSectionName('${tabId}',this.value)" title="Κλικ για επεξεργασία ονόματος">
         <span class="badge">${items.length}</span>
       </div>
-      <span class="chevron ${isOpen?'open':''}">▼</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button class="del-btn" onclick="event.stopPropagation();deleteCategory('${tabId}')" title="Διαγραφή κατηγορίας" style="font-size:12px;width:auto;padding:0 8px;">🗑 Κατηγορία</button>
+        <span class="chevron ${isOpen?'open':''}">▼</span>
+      </div>
     </div>
     ${isOpen?`<div class="section-body">${rows}<button class="add-item-btn" onclick="addFlat('${tabId}')">+ Προσθήκη προϊόντος</button></div>`:''}
   </div>`;
