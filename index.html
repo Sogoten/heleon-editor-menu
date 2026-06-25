@@ -527,13 +527,7 @@ const GITHUB_USER = 'Sogoten';
 const GITHUB_REPO = 'heleon-menu-live';
 
 async function publishMenu(){
-  let token = localStorage.getItem('gh_token_heleon');
-  if(!token){
-    token = prompt('GitHub Personal Access Token:\n(αποθηκεύεται στον browser)');
-    if(!token) return;
-    localStorage.setItem('gh_token_heleon', token.trim());
-  }
-  token = token.trim();
+  const token = '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';
   const btn = document.getElementById('publishBtn');
   btn.disabled = true; btn.textContent = '⏳ Ανεβαίνει...';
   try {
@@ -564,7 +558,7 @@ async function publishMenu(){
     });
     if(!upload.ok){
       const err = await upload.json();
-      if(err.message && err.message.includes('Bad credentials')){ localStorage.removeItem('gh_token_heleon'); throw new Error('Λάθος token!'); }
+      throw new Error('Λάθος token!'); }
       throw new Error(err.message || 'Αποτυχία');
     }
     showToast('✓ Ανέβηκε! Vercel κάνει deploy...');
