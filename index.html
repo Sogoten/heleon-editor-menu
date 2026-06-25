@@ -526,11 +526,11 @@ function downloadMenu(returnOnly){
 const GITHUB_USER = 'Sogoten';
 const GITHUB_REPO = 'heleon-menu-live';
 
-async function publishMenu(){
-  const token = ['ghp_boHds', 'DPhKpjG', 'PaPn4sVn', 'ayhLUoNH2o2N6U6S'].join('');
-  
-  const btn = document.getElementById('publishBtn');
-  btn.disabled = true; btn.textContent = '⏳ Ανεβαίνει...';
+	async function publishMenu(){
+		const token = ['ghp_boHds', 'DPhKpjG', 'PaPn4sVn', 'ayhLUoNH2o2N6U6S'].join('');
+
+		const btn = document.getElementById('publishBtn');
+		btn.disabled = true; btn.textContent = '⏳ Ανεβαίνει...';
   try {
     const html = downloadMenu(true);
     const repoCheck = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}`, {
@@ -559,7 +559,7 @@ async function publishMenu(){
     });
     if(!upload.ok){
       const err = await upload.json();
-      throw new Error('Λάθος token!'); }
+
       throw new Error(err.message || 'Αποτυχία');
     }
     showToast('✓ Ανέβηκε! Vercel κάνει deploy...');
