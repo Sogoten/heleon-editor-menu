@@ -459,7 +459,7 @@ function downloadMenu(returnOnly){
 
   /* Nav */
   .nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; padding: 1rem 1rem 0; position: sticky; top: 0; background: ${design.bgColor}; z-index: 10; border-bottom: 1px solid #C5DCE8; }
-  .nav a { font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; padding: 6px 10px; color: #6B8FA8; font-family: '${design.headingFont}', serif; transition: color 0.2s; border-bottom: 2px solid transparent; }
+  .nav a { font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; padding: 6px 10px; color: #6B8FA8; font-family: '${design.bodyFont}', serif; transition: color 0.2s; border-bottom: 2px solid transparent; }
   .nav a:hover, .nav a.active { color: ${design.headingColor}; border-bottom-color: ${design.headingColor}; }
 
   /* Content */
@@ -587,7 +587,7 @@ async function doLogin(){
   if(!user||!pass){ errEl.textContent='Συμπλήρωσε username και password.'; return; }
   const hash = await sha256(user+':'+pass);
   if(hash === CREDENTIALS_HASH){
-    sessionStorage.setItem('heleon_auth','1');
+    localStorage.setItem('heleon_auth','1');
     document.getElementById('login-screen').classList.add('hidden');
     errEl.textContent='';
   } else {
@@ -602,7 +602,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
       if(e.key==='Enter') doLogin();
     });
   });
-  if(sessionStorage.getItem('heleon_auth')==='1'){
+  if(localStorage.getItem('heleon_auth')==='1'){
     document.getElementById('login-screen').classList.add('hidden');
   }
 });
