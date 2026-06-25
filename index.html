@@ -156,7 +156,6 @@
   </div>
   <div class="header-actions">
     <button class="btn" onclick="toggleDesign()">🎨 Σχεδιασμός</button>
-    <button class="btn" onclick="expandAll()">Άνοιγμα όλων</button>
     <button class="btn btn-teal" onclick="addCategory()">+ Κατηγορία</button>
     <button class="btn btn-teal" onclick="downloadMenu()">⬇ Κατέβασε Menu</button>
     <button class="btn btn-publish" onclick="publishMenu()" id="publishBtn">🚀 Δημοσίευση</button>
@@ -425,7 +424,6 @@ function addFlat(tabId){ state[tabId].push({name:'Νέο προϊόν',desc:'',p
 function updateSectionName(tabId,val){ tabLabels[tabId]=val; }
 function toggleCollapse(key){ collapsed[key]=!collapsed[key]; render(); }
 function setTab(id){ activeTab=id; render(); }
-function expandAll(){ collapsed={}; render(); }
 
 function renderFlatSection(tabId, items){
   const key = tabId+'_main';
