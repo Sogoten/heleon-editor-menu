@@ -77,8 +77,8 @@
 
   /* ── Item rows ── */
   .item-row { display: grid; gap: 8px; align-items: start; padding: 10px; border: 1px solid var(--rule); border-radius: 8px; background: #fafcfe; }
-  .item-row.food-row { grid-template-columns: 1fr 2fr 100px 36px; }
-  .item-row.drink-row-e { grid-template-columns: 1fr 100px 36px; }
+  .item-row.food-row { grid-template-columns: 22px 1fr 2fr 100px 36px; }
+  .item-row.drink-row-e { grid-template-columns: 22px 1fr 100px 36px; }
   .col-wrap { display: flex; flex-direction: column; gap: 3px; }
   .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
   input[type=text] { width: 100%; padding: 6px 8px; border: 1px solid var(--rule); border-radius: 5px; font-size: 13px; background: #fff; color: var(--text); font-family: inherit; }
@@ -88,6 +88,13 @@
   .price-input { text-align: right; }
   .del-btn { background: none; border: 1px solid var(--rule); border-radius: 5px; cursor: pointer; color: var(--muted); font-size: 15px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; padding: 0; align-self: center; transition: background 0.15s, color 0.15s; }
   .del-btn:hover { background: #fdecea; color: var(--danger); border-color: #f5c6c2; }
+  .move-btns { display: flex; flex-direction: column; gap: 2px; align-self: center; }
+  .move-btn { background: none; border: 1px solid var(--rule); border-radius: 4px; cursor: pointer; color: var(--muted); font-size: 11px; width: 22px; height: 17px; display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1; transition: background 0.15s, color 0.15s; }
+  .move-btn:hover { background: var(--surface2); color: var(--navy); }
+  .move-btn:disabled { opacity: 0.2; cursor: default; }
+  .cat-move-btn { background: none; border: 1px solid var(--rule); border-radius: 4px; cursor: pointer; color: var(--muted); font-size: 11px; padding: 2px 6px; transition: background 0.15s, color 0.15s; }
+  .cat-move-btn:hover { background: var(--surface2); color: var(--navy); }
+  .cat-move-btn:disabled { opacity: 0.2; cursor: default; }
   .add-item-btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px; border: 1.5px dashed var(--rule); border-radius: 8px; background: none; cursor: pointer; font-size: 13px; color: var(--muted); font-family: inherit; transition: background 0.15s, color 0.15s; width: 100%; margin-top: 2px; }
   .add-item-btn:hover { background: #e8f7f7; color: var(--teal); border-color: var(--teal); }
 
@@ -384,6 +391,22 @@ function deleteCategory(tabId){
   render();
 }
 
+function moveItem(tabId, i, dir){
+  const arr = state[tabId];
+  const j = i + dir;
+  if(j < 0 || j >= arr.length) return;
+  [arr[i], arr[j]] = [arr[j], arr[i]];
+  render();
+}
+
+function moveCategory(tabId, dir){
+  const i = TABS.findIndex(t => t.id === tabId);
+  const j = i + dir;
+  if(j < 0 || j >= TABS.length) return;
+  [TABS[i], TABS[j]] = [TABS[j], TABS[i]];
+  render();
+}
+
 function updateFlat(tabId,i,field,val){ state[tabId][i][field]=val; }
 function deleteFlat(tabId,i){ state[tabId].splice(i,1); render(); }
 function addFlat(tabId){ state[tabId].push({name:'Νέο προϊόν',desc:'',price:'0,00€'}); render(); }
@@ -395,8 +418,13 @@ function expandAll(){ collapsed={}; render(); }
 function renderFlatSection(tabId, items){
   const key = tabId+'_main';
   const isOpen = !collapsed[key];
+  const catIdx = TABS.findIndex(t => t.id === tabId);
   const rows = items.map((item,i) => `
     <div class="item-row food-row">
+      <div class="move-btns">
+        <button class="move-btn" onclick="moveItem('${tabId}',${i},-1)" ${i===0?'disabled':''}>▲</button>
+        <button class="move-btn" onclick="moveItem('${tabId}',${i},1)" ${i===items.length-1?'disabled':''}>▼</button>
+      </div>
       <div class="col-wrap"><div class="lbl">Όνομα</div><input type="text" value="${esc(item.name)}" onchange="updateFlat('${tabId}',${i},'name',this.value)"></div>
       <div class="col-wrap"><div class="lbl">Περιγραφή</div><textarea onchange="updateFlat('${tabId}',${i},'desc',this.value)">${esc(item.desc||'')}</textarea></div>
       <div class="col-wrap"><div class="lbl">Τιμή</div><input type="text" class="price-input" value="${esc(item.price)}" onchange="updateFlat('${tabId}',${i},'price',this.value)"></div>
@@ -409,12 +437,15 @@ function renderFlatSection(tabId, items){
         <span class="badge">${items.length}</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
+        <button class="cat-move-btn" onclick="event.stopPropagation();moveCategory('${tabId}',-1)" ${catIdx===0?'disabled':''} title="Μετακίνηση πάνω">▲</button>
+        <button class="cat-move-btn" onclick="event.stopPropagation();moveCategory('${tabId}',1)" ${catIdx===TABS.length-1?'disabled':''} title="Μετακίνηση κάτω">▼</button>
         <button class="del-btn" onclick="event.stopPropagation();deleteCategory('${tabId}')" title="Διαγραφή κατηγορίας" style="font-size:12px;width:auto;padding:0 8px;">🗑 Κατηγορία</button>
         <span class="chevron ${isOpen?'open':''}">▼</span>
       </div>
     </div>
     ${isOpen?`<div class="section-body">${rows}<button class="add-item-btn" onclick="addFlat('${tabId}')">+ Προσθήκη προϊόντος</button></div>`:''}
   </div>`;
+}
 }
 
 function render(){
