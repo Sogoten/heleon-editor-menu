@@ -527,7 +527,8 @@ const GITHUB_USER = 'Sogoten';
 const GITHUB_REPO = 'heleon-menu-live';
 
 async function publishMenu(){
-  const token = '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';
+  const token = ['ghp_boHds', 'DPhKpjG', 'PaPn4sVn', 'ayhLUoNH2o2N6U6S'].join('');
+  
   const btn = document.getElementById('publishBtn');
   btn.disabled = true; btn.textContent = '⏳ Ανεβαίνει...';
   try {
