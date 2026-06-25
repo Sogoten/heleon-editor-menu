@@ -443,13 +443,15 @@ function renderFlatSection(tabId, items){
     </div>`).join('');
   return `<div class="section-block">
     <div class="section-head" onclick="event.target.tagName!=='INPUT'&&toggleCollapse('${key}')">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button class="cat-move-btn" onclick="event.stopPropagation();moveCategory('${tabId}',-1)" ${catIdx===0?'disabled':''} title="Μετακίνηση πάνω">▲</button>
+        <button class="cat-move-btn" onclick="event.stopPropagation();moveCategory('${tabId}',1)" ${catIdx===TABS.length-1?'disabled':''} title="Μετακίνηση κάτω">▼</button>
+      </div>
       <div class="section-head-left">
         <input class="section-name-input" type="text" value="${esc(tabLabels[tabId])}" onclick="event.stopPropagation()" onchange="updateSectionName('${tabId}',this.value)" title="Κλικ για επεξεργασία ονόματος">
         <span class="badge">${items.length}</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
-        <button class="cat-move-btn" onclick="event.stopPropagation();moveCategory('${tabId}',-1)" ${catIdx===0?'disabled':''} title="Μετακίνηση πάνω">▲</button>
-        <button class="cat-move-btn" onclick="event.stopPropagation();moveCategory('${tabId}',1)" ${catIdx===TABS.length-1?'disabled':''} title="Μετακίνηση κάτω">▼</button>
         <button class="del-btn" onclick="event.stopPropagation();deleteCategory('${tabId}')" title="Διαγραφή κατηγορίας" style="font-size:12px;width:auto;padding:0 8px;">✕</button>
         <span class="chevron ${isOpen?'open':''}">▼</span>
       </div>
