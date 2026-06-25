@@ -196,7 +196,8 @@
     <div class="design-group">
       <div class="design-label">Γραμματοσειρά κειμένου</div>
       <select class="font-select" id="bodyFontSelect" onchange="design.bodyFont=this.value">
-        <option value="Lora">Lora (τρέχουσα)</option>
+        <option value="Source Serif 4">Source Serif 4 (τρέχουσα)</option>
+        <option value="Lora">Lora</option>
         <option value="Cormorant Garamond">Cormorant Garamond</option>
         <option value="Merriweather">Merriweather</option>
         <option value="Libre Baskerville">Libre Baskerville</option>
@@ -249,7 +250,7 @@ let design = {
   itemColor:    '#2BA8A4',
   bgColor:      '#F4F5F6',
   headingFont:  'Cinzel',
-  bodyFont:     'Lora',
+  bodyFont:     'Source Serif 4',
   fontSize:     100,
 };
 
@@ -415,7 +416,7 @@ function showToast(msg){
 
 // ── Download Menu ──
 function downloadMenu(returnOnly){
-  const gFonts = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(design.headingFont)}:ital,wght@0,400;0,700&family=${encodeURIComponent(design.bodyFont)}:ital,wght@0,400;0,700&subset=greek,latin&display=swap`;
+  const gFonts = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(design.headingFont)}:wght@400;700&family=${encodeURIComponent(design.bodyFont)}:ital,wght@0,400;0,700;1,400&display=swap&subset=greek`;
   const fs = design.fontSize;
 
   function esc2(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
